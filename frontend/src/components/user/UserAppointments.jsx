@@ -103,7 +103,7 @@ const UserAppointments = () => {
 
   const handleDownload = async (url, appointId) => {
     try {
-      const res = await axios.get('http://localhost:5002/api/doctor/getdocumentdownload', {
+      const res = await axios.get('/api/doctor/getdocumentdownload', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem("token")}`,
         },
