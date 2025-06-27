@@ -7,74 +7,71 @@ import axios from 'axios';
 import { message } from 'antd';
 
 const AdminDoctors = () => {
-
-   const [doctors, setDoctors] = useState([])
+   const [doctors, setDoctors] = useState([]);
 
    const getDoctors = async () => {
       try {
-         const res = await axios.get('/api/admin/getalldoctors', {
+         const res = await axios.get('https://doctor-appointment-app-svx4.onrender.com/api/admin/getalldoctors', {
             headers: {
                Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-         })
+         });
          if (res.data.success) {
-            setDoctors(res.data.data)
+            setDoctors(res.data.data);
          }
       } catch (error) {
-         console.log(error)
-         message.error('something went wrong')
+         console.log(error);
+         message.error('Something went wrong');
       }
-   }
+   };
 
    const handleApprove = async (doctorId, status, userid) => {
-      console.log(doctorId, status, userid)
       try {
-         const res = await axios.post('http://localhost:5002/api/admin/getapprove', { doctorId, status, userid }, {
+         const res = await axios.post('https://doctor-appointment-app-svx4.onrender.com/api/admin/getapprove', {
+            doctorId, status, userid
+         }, {
             headers: {
                Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-         })
+         });
 
          if (res.data.success) {
-            message.success(res.data.message)
+            message.success(res.data.message);
+            getDoctors(); // Refresh the list
          }
-         console.log(res)
       } catch (error) {
-         console.log(error)
-         message.error('something went wrong')
+         console.log(error);
+         message.error('Something went wrong');
       }
-   }
+   };
 
    const handleReject = async (doctorId, status, userid) => {
-      console.log(doctorId, status, userid)
       try {
-         const res = await axios.post('http://localhost:5002/api/admin/getreject', { doctorId, status, userid }, {
+         const res = await axios.post('https://doctor-appointment-app-svx4.onrender.com/api/admin/getreject', {
+            doctorId, status, userid
+         }, {
             headers: {
                Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-         })
+         });
 
          if (res.data.success) {
-            message.success(res.data.message)
+            message.success(res.data.message);
+            getDoctors(); // Refresh the list
          }
-         console.log(res)
       } catch (error) {
-         console.log(error)
-         message.error('something went wrong')
+         console.log(error);
+         message.error('Something went wrong');
       }
-   }
-
+   };
 
    useEffect(() => {
-      getDoctors()
-
-   }, [])
-
+      getDoctors();
+   }, []);
 
    return (
       <div>
          <h2 className='p-3 text-center'>All Doctors</h2>
-
          <Container>
             <Table striped bordered hover>
                <thead>
@@ -88,24 +85,35 @@ const AdminDoctors = () => {
                </thead>
                <tbody>
                   {doctors.length > 0 ? (
-                     doctors.map((user) => {
-                        return (
-                           <tr key={user._id}>
-                              <td>{user._id}</td>
-                              <td>{user.fullName}</td>
-                              <td>{user.email}</td>
-                              <td>{user.phone}</td>
-                              <td>{user.status === 'pending' ?
-                                 <Button onClick={() => handleApprove(user._id, 'approved', user.userId)} className='mx-2' size='sm' variant="outline-success">
+                     doctors.map((user) => (
+                        <tr key={user._id}>
+                           <td>{user._id}</td>
+                           <td>{user.fullName}</td>
+                           <td>{user.email}</td>
+                           <td>{user.phone}</td>
+                           <td>
+                              {user.status === 'pending' ? (
+                                 <Button
+                                    onClick={() => handleApprove(user._id, 'approved', user.userId)}
+                                    className='mx-2'
+                                    size='sm'
+                                    variant="outline-success"
+                                 >
                                     Approve
                                  </Button>
-                                 :
-                                 <Button onClick={() => handleReject(user._id, 'rejected', user.userId)} className='mx-2' size='sm' variant="outline-danger">
+                              ) : (
+                                 <Button
+                                    onClick={() => handleReject(user._id, 'rejected', user.userId)}
+                                    className='mx-2'
+                                    size='sm'
+                                    variant="outline-danger"
+                                 >
                                     Reject
-                                 </Button>}</td>
-                           </tr>
-                        )
-                     })
+                                 </Button>
+                              )}
+                           </td>
+                        </tr>
+                     ))
                   ) : (
                      <tr>
                         <td colSpan={5}>
@@ -114,13 +122,12 @@ const AdminDoctors = () => {
                            </Alert>
                         </td>
                      </tr>
-
                   )}
                </tbody>
             </Table>
          </Container>
       </div>
-   )
-}
+   );
+};
 
-export default AdminDoctors
+export default AdminDoctors;
