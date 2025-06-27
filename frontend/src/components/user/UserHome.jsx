@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Badge, Row } from 'antd';
 import Notification from '../common/Notification';
 import axios from 'axios';
@@ -14,24 +14,30 @@ import UserAppointments from './UserAppointments';
 import DoctorList from './DoctorList';
 
 const UserHome = () => {
-   const [doctors, setDoctors] = useState([])
-   const [userdata, setUserData] = useState({})
+   const [doctors, setDoctors] = useState([]);
+   const [userdata, setUserData] = useState({});
    const [activeMenuItem, setActiveMenuItem] = useState('');
 
+   const baseURL = 'https://doctor-appointment-app-svx4.onrender.com';
+
    const getUser = () => {
-      const user = JSON.parse(localStorage.getItem('userData'))
+      const user = JSON.parse(localStorage.getItem('userData'));
       if (user) {
-         setUserData(user)
+         setUserData(user);
       }
-   }
+   };
 
    const getUserData = async () => {
       try {
-         await axios.post('/api/user/getuserdata', {}, {
-            headers: {
-               Authorization: "Bearer " + localStorage.getItem('token')
-            },
-         });
+         await axios.post(
+            `${baseURL}/api/user/getuserdata`,
+            {},
+            {
+               headers: {
+                  Authorization: 'Bearer ' + localStorage.getItem('token'),
+               },
+            }
+         );
       } catch (error) {
          console.log(error);
       }
@@ -39,13 +45,13 @@ const UserHome = () => {
 
    const getDoctorData = async () => {
       try {
-         const res = await axios.get('/api/user/getalldoctorsu', {
+         const res = await axios.get(`${baseURL}/api/user/getalldoctorsu`, {
             headers: {
-               Authorization: "Bearer " + localStorage.getItem('token')
+               Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
          });
          if (res.data.success) {
-            setDoctors(res.data.data)
+            setDoctors(res.data.data);
          }
       } catch (error) {
          console.log(error);
@@ -55,13 +61,13 @@ const UserHome = () => {
    useEffect(() => {
       getUser();
       getUserData();
-      getDoctorData()
+      getDoctorData();
    }, []);
 
    const logout = () => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("userData");
-      window.location.href = "/";
+      localStorage.removeItem('token');
+      localStorage.removeItem('userData');
+      window.location.href = '/';
    };
 
    const handleMenuItemClick = (menuItem) => {
@@ -71,56 +77,84 @@ const UserHome = () => {
    return (
       <>
          <div className='main'>
-            <div className="layout">
-               <div className="sidebar">
-                  <div className="logo">
+            <div className='layout'>
+               <div className='sidebar'>
+                  <div className='logo'>
                      <h2>MediCareBook</h2>
                   </div>
-                  <div className="menu">
-                     {/* <div className="menu-items">
-                        <CalendarMonthIcon className='icon' /><Link>Home</Link>
-                     </div> */}
-                     <div className={`menu-items ${activeMenuItem === 'userappointments' ? 'active' : ''}`} onClick={() => handleMenuItemClick('userappointments')}>
-                        <CalendarMonthIcon className='icon' /><Link>Appointments</Link>
+                  <div className='menu'>
+                     <div
+                        className={`menu-items ${
+                           activeMenuItem === 'userappointments' ? 'active' : ''
+                        }`}
+                        onClick={() => handleMenuItemClick('userappointments')}
+                     >
+                        <CalendarMonthIcon className='icon' />
+                        <Link>Appointments</Link>
                      </div>
-                     {userdata.isdoctor === true ? <></> : <div className={`menu-items ${activeMenuItem === 'applyDoctor' ? 'active' : ''}`} onClick={() => handleMenuItemClick('applyDoctor')}>
-                        <MedicationIcon className='icon' /><Link>Apply doctor</Link>
-                     </div>}
-                     
-                     
-                     <div className="menu-items" onClick={logout}>
-                        <LogoutIcon className='icon' /><Link>Logout</Link>
+                     {!userdata.isdoctor && (
+                        <div
+                           className={`menu-items ${
+                              activeMenuItem === 'applyDoctor' ? 'active' : ''
+                           }`}
+                           onClick={() => handleMenuItemClick('applyDoctor')}
+                        >
+                           <MedicationIcon className='icon' />
+                           <Link>Apply doctor</Link>
+                        </div>
+                     )}
+                     <div className='menu-items' onClick={logout}>
+                        <LogoutIcon className='icon' />
+                        <Link>Logout</Link>
                      </div>
                   </div>
                </div>
-               <div className="content">
-                  <div className="header">
-                     <div className="header-content">
-                        
-                        <Badge className={`notify ${activeMenuItem === 'notification' ? 'active' : ''}`} onClick={() => handleMenuItemClick('notification')} count={userdata?.notification ? userdata.notification.length : 0}>
-                           <NotificationsIcon className="icon" />
+               <div className='content'>
+                  <div className='header'>
+                     <div className='header-content'>
+                        <Badge
+                           className={`notify ${
+                              activeMenuItem === 'notification' ? 'active' : ''
+                           }`}
+                           onClick={() => handleMenuItemClick('notification')}
+                           count={userdata?.notification ? userdata.notification.length : 0}
+                        >
+                           <NotificationsIcon className='icon' />
                         </Badge>
 
-                        {userdata.isdoctor === true && <h3>Dr. </h3>}
+                        {userdata.isdoctor === true && <h3>Dr.</h3>}
                         <h3>{userdata.fullName}</h3>
                      </div>
                   </div>
-                  <div className="body">
-                     {activeMenuItem === 'applyDoctor' && <ApplyDoctor userId={userdata._id} />}
+                  <div className='body'>
+                     {activeMenuItem === 'applyDoctor' && (
+                        <ApplyDoctor userId={userdata._id} />
+                     )}
                      {activeMenuItem === 'notification' && <Notification />}
                      {activeMenuItem === 'userappointments' && <UserAppointments />}
-                     {activeMenuItem !== 'applyDoctor' && activeMenuItem !== 'notification' && activeMenuItem !== 'userappointments' && <Container>
-                        <h2 className="text-center p-2">Home</h2>
-                        
-                        {userdata.isdoctor === true ? <></> : <Row>
-                           {doctors && doctors.map((doctor, i) => {
-                              let notifyDoc = doctor.userId
-                              return (
-                                 <DoctorList userDoctorId={notifyDoc} doctor={doctor} userdata={userdata} key={i} />
-                              )
-                           })}
-                        </Row>}
-                     </Container>}
+                     {!['applyDoctor', 'notification', 'userappointments'].includes(
+                        activeMenuItem
+                     ) && (
+                        <Container>
+                           <h2 className='text-center p-2'>Home</h2>
+                           {!userdata.isdoctor && (
+                              <Row>
+                                 {doctors &&
+                                    doctors.map((doctor, i) => {
+                                       let notifyDoc = doctor.userId;
+                                       return (
+                                          <DoctorList
+                                             userDoctorId={notifyDoc}
+                                             doctor={doctor}
+                                             userdata={userdata}
+                                             key={i}
+                                          />
+                                       );
+                                    })}
+                              </Row>
+                           )}
+                        </Container>
+                     )}
                   </div>
                </div>
             </div>
@@ -130,4 +164,3 @@ const UserHome = () => {
 };
 
 export default UserHome;
-
