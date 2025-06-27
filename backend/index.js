@@ -1,10 +1,9 @@
-// === backend/index.js ===
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const connectToDB = require("./config/connectToDB");
 
-// ✅ Load environment variables as early as possible
+// ✅ Load environment variables
 dotenv.config();
 
 const app = express();
@@ -17,7 +16,14 @@ const PORT = process.env.PORT || 5002;
 
 // ✅ Middleware
 app.use(express.json());
-app.use(cors());
+
+// ✅ Allow frontend domain in CORS
+app.use(
+  cors({
+    origin: "https://doctor-appointment-app-rust-eta.vercel.app",
+    credentials: true, // if using cookies or auth headers
+  })
+);
 
 // ✅ Routes
 app.use('/api/user/', require('./routes/userRoutes'));
