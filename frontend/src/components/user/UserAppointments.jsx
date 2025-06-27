@@ -88,15 +88,17 @@ const UserAppointments = () => {
 
   useEffect(() => {
     getUser();
-  }, [userid]);
+  }, []);
 
   useEffect(() => {
-    if (type === true) {
-      getDoctorAppointment();
-    } else {
-      getUserAppointment();
+    if (userid) {
+      if (type === true) {
+        getDoctorAppointment();
+      } else {
+        getUserAppointment();
+      }
     }
-  }, [type]);
+  }, [userid, type]);
 
   const handleDownload = async (url, appointId) => {
     try {
@@ -114,7 +116,7 @@ const UserAppointments = () => {
         document.body.appendChild(downloadLink);
         downloadLink.setAttribute("href", fileUrl);
 
-        const fileName = url.split("/").pop();
+        const fileName = url?.split("/")?.pop() || "document.jpg";
         downloadLink.setAttribute("download", fileName);
         downloadLink.style.display = "none";
         downloadLink.click();
@@ -151,12 +153,18 @@ const UserAppointments = () => {
                     <td>{appointment.date}</td>
                     <td>{appointment.userInfo.phone}</td>
                     <td>
-                      <Button
-                        variant='link'
-                        onClick={() => handleDownload(appointment.document.path, appointment._id)}
-                      >
-                        {appointment.document.filename}
-                      </Button>
+                      {appointment.document ? (
+                        <Button
+                          variant='link'
+                          onClick={() =>
+                            handleDownload(appointment.document.path, appointment._id)
+                          }
+                        >
+                          {appointment.document.filename}
+                        </Button>
+                      ) : (
+                        <span>No Document</span>
+                      )}
                     </td>
                     <td>{appointment.status}</td>
                     <td>
