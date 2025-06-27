@@ -5,35 +5,31 @@ import { Container } from 'react-bootstrap';
 import axios from 'axios';
 
 const AdminUsers = () => {
+   const [users, setUsers] = useState([]);
 
-   const [users, setUsers] = useState([])
-
-   const getUsers = async()=>{
+   const getUsers = async () => {
       try {
-         const res = await axios.get('/api/admin/getallusers', {
+         const res = await axios.get('https://doctor-appointment-app-svx4.onrender.com/api/admin/getallusers', {
             headers: {
-               Authorization : `Bearer ${localStorage.getItem("token")}`,
+               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-         })
-         if(res.data.success){
-            setUsers(res.data.data)
-            console.log(users)
+         });
+         if (res.data.success) {
+            setUsers(res.data.data);
+            console.log(res.data.data);
          }
       } catch (error) {
-         console.log(error)
+         console.log(error);
       }
-   }
+   };
 
-   useEffect(()=>{
-      getUsers()
-
-   },[])
-
+   useEffect(() => {
+      getUsers();
+   }, []);
 
    return (
       <div>
          <h4 className='p-3 text-center'>All Users</h4>
-         
          <Container>
             <Table className='my-3' striped bordered hover>
                <thead>
@@ -47,29 +43,29 @@ const AdminUsers = () => {
                </thead>
                <tbody>
                   {users.length > 0 ? (
-                     users.map((user) => {
-
-                        return (
-                           <tr key={user._id}>
-                              <td>{user.fullName}</td>
-                              <td>{user.email}</td>
-                              <td>{user.phone}</td>
-                              <td>{user.type}</td>
-                              <td>{user.isdoctor === true ? 'Yes' : 'No'}</td>
-                              
-                           </tr>
-                        )
-                     })
+                     users.map((user) => (
+                        <tr key={user._id}>
+                           <td>{user.fullName}</td>
+                           <td>{user.email}</td>
+                           <td>{user.phone}</td>
+                           <td>{user.type}</td>
+                           <td>{user.isdoctor === true ? 'Yes' : 'No'}</td>
+                        </tr>
+                     ))
                   ) : (
-                     <Alert variant="info">
-                        <Alert.Heading>No Users to show</Alert.Heading>
-                     </Alert>
+                     <tr>
+                        <td colSpan={5}>
+                           <Alert variant="info">
+                              <Alert.Heading>No Users to show</Alert.Heading>
+                           </Alert>
+                        </td>
+                     </tr>
                   )}
                </tbody>
             </Table>
          </Container>
       </div>
-   )
-}
+   );
+};
 
-export default AdminUsers
+export default AdminUsers;
