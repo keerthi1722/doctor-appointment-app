@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { message } from 'antd';
 import { Button, Form } from 'react-bootstrap';
-import photo1 from '../../images/image2.png'
+import photo1 from '../../images/image2.png';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -18,19 +18,17 @@ import {
 } from 'mdb-react-ui-kit';
 
 const Login = () => {
-  const navigate = useNavigate()
-  const [user, setUser] = useState({
-    email: '', password: ''
-  })
+  const navigate = useNavigate();
+  const [user, setUser] = useState({ email: '', password: '' });
 
   const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value })
-  }
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/user/login", user);
+      const res = await axios.post("https://doctor-appointment-app-svx4.onrender.com/api/user/login", user);
       if (res.data.success) {
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('userData', JSON.stringify(res.data.userData));
@@ -46,7 +44,7 @@ const Login = () => {
             navigate("/userhome");
             break;
           default:
-            navigate("/Login");
+            navigate("/login");
             break;
         }
       } else {
@@ -63,11 +61,11 @@ const Login = () => {
       <Navbar expand="lg" className="bg-body-tertiary">
         <Container fluid>
           <Navbar.Brand>
-            <Link  className='head' to={'/'}>BookaDoc</Link>
+            <Link className='head' to={'/'}>BookaDoc</Link>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
-            <Nav className="me-auto my-2 my-lg-0" navbarScroll></Nav>
+            <Nav className="me-auto my-2 my-lg-0" navbarScroll />
             <Nav>
               <Link className='li' to={'/'}>Home</Link>
               <Link className='li' to={'/login'}>Login</Link>
@@ -84,7 +82,6 @@ const Login = () => {
             padding: '2rem',
             borderRadius: '12px'
           }} className='g-0'>
-
             <MDBCol md='6'>
               <MDBCardImage
                 src={photo1}
