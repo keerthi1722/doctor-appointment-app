@@ -98,7 +98,7 @@ const UserAppointments = () => {
         getUserAppointment();
       }
     }
-  }, [userid, type]);
+  }, [type, userid]);
 
   const handleDownload = async (url, appointId) => {
     try {
@@ -116,7 +116,7 @@ const UserAppointments = () => {
         document.body.appendChild(downloadLink);
         downloadLink.setAttribute("href", fileUrl);
 
-        const fileName = url?.split("/")?.pop() || "document.jpg";
+        const fileName = url.split("/").pop();
         downloadLink.setAttribute("download", fileName);
         downloadLink.style.display = "none";
         downloadLink.click();
@@ -149,16 +149,14 @@ const UserAppointments = () => {
               {doctorAppointments.length > 0 ? (
                 doctorAppointments.map((appointment) => (
                   <tr key={appointment._id}>
-                    <td>{appointment.userInfo.fullName}</td>
+                    <td>{appointment.userInfo?.fullName}</td>
                     <td>{appointment.date}</td>
-                    <td>{appointment.userInfo.phone}</td>
+                    <td>{appointment.userInfo?.phone}</td>
                     <td>
-                      {appointment.document ? (
+                      {appointment.document && appointment.document.filename ? (
                         <Button
                           variant='link'
-                          onClick={() =>
-                            handleDownload(appointment.document.path, appointment._id)
-                          }
+                          onClick={() => handleDownload(appointment.document.path, appointment._id)}
                         >
                           {appointment.document.filename}
                         </Button>
