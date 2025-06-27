@@ -20,25 +20,28 @@ function ApplyDoctor({ userId }) {
    };
 
    const handleChange = (e) => {
-      setDoctor({ ...doctor, [e.target.name]: e.target.value })
-   }
+      setDoctor({ ...doctor, [e.target.name]: e.target.value });
+   };
+
    const handleSubmit = async () => {
-      
       try {
-         const res = await axios.post('/api/user/registerdoc', { doctor, userId: userId }, {
-            headers: {
-               Authorization: `Bearer ${localStorage.getItem('token')}`
+         const res = await axios.post(
+            'https://doctor-appointment-app-svx4.onrender.com/api/user/registerdoc',
+            { doctor, userId },
+            {
+               headers: {
+                  Authorization: `Bearer ${localStorage.getItem('token')}`
+               }
             }
-         })
+         );
          if (res.data.success) {
-            message.success(res.data.message)
-         }
-         else {
-            message.error(res.data.success)
+            message.success(res.data.message);
+         } else {
+            message.error(res.data.message);
          }
       } catch (error) {
-         console.log(error)
-         message.error('Something went wrong')
+         console.log(error);
+         message.error('Something went wrong');
       }
    };
 
@@ -69,6 +72,7 @@ function ApplyDoctor({ userId }) {
                   </Form.Item>
                </Col>
             </Row>
+
             <h4>Professional Details:</h4>
             <Row gutter={20}>
                <Col xs={24} md={12} lg={8}>
@@ -92,6 +96,7 @@ function ApplyDoctor({ userId }) {
                   </Form.Item>
                </Col>
             </Row>
+
             <div className="d-flex justify-content-end">
                <button className="btn btn-primary" type="submit">Submit</button>
             </div>
