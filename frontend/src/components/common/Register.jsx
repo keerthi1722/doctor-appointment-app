@@ -26,12 +26,12 @@ const Register = () => {
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/user/register', user);
+      const res = await axios.post('https://doctor-appointment-app-svx4.onrender.com/api/user/register', user);
       if (res.data.success) {
         message.success('Registered Successfully');
         navigate('/login');
@@ -42,7 +42,7 @@ const Register = () => {
       console.log(error);
       message.error('Something went wrong');
     }
-  }
+  };
 
   return (
     <>
@@ -53,7 +53,7 @@ const Register = () => {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
-            <Nav className="me-auto my-2 my-lg-0" navbarScroll></Nav>
+            <Nav className="me-auto my-2 my-lg-0" navbarScroll />
             <Nav>
               <Link className='li' to={'/'}>Home</Link>
               <Link className='li' to={'/login'}>Login</Link>
@@ -211,6 +211,6 @@ const Register = () => {
       </MDBContainer>
     </>
   );
-}
+};
 
 export default Register;
